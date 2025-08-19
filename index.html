@@ -3,9 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYZhong聚合门户 - macOS风格</title>
+    <link rel="icon" href="./favicon.svg" type="image/x-icon">
+
+    <title>SYZhong 服务聚合门户</title>
     <style>
-        /* ===== macOS全局样式 ===== */
+:root {
+    /* 主色调：低饱和天空蓝（干净通透，传递冷静与专业感） */
+  --accent-color: #919191; /* 低饱和天空蓝替代原灰色 */
+    
+--light-bg: linear-gradient(135deg, #F5F9FC 0%, #E6F0F5 100%); /* 冷调灰蓝渐变 */
+--dark-bg: linear-gradient(135deg, #1A2A36 0%, #152028 100%); /* 深海蓝灰渐变 */
+    
+    /* 浅色卡片：微透明白（叠加柔和阴影提升立体感） */
+    --card-light: rgba(255, 255, 255, 0.92); 
+    
+    /* 深色卡片：深灰蓝（降低透明度避免沉闷） */
+    --card-dark: rgba(28, 40, 51, 0.88); 
+    
+    /* 高亮色：柔杏色（替代原紫色，温暖不突兀） */
+    --highlight-color: #E0B7A6; 
+    
+    /* 文本色：深灰（非纯黑减少对比疲劳） */
+    --text-color: #2C3E50; 
+    
+    /* 深色模式文本：灰白（避免纯白刺眼） */
+    --text-color-dark: #E0E6EB; 
+    
+    /* 边框：灰蓝透明线（细线条增强精致感） */
+    --border-color: rgba(175, 200, 210, 0.4); 
+    
+    /* 深色边框：深海蓝（与背景协调） */
+    --border-color-dark: 1.5px solid rgba(70, 100, 120, 0.3); 
+      --accent-dark: #407584; /* 加深30%的辅助色 */
+  --accent-light: #d5d5d5; /* 提亮20%的高光色 */
+
+    /* 标题渐变：蓝灰渐变（保留科技感但更柔和） */
+  --title-gradient: linear-gradient(90deg, var(--accent-dark), var(--accent-light)); /* 渐变增加动态感 */
+}
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
@@ -13,38 +47,56 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #fafdff 0%, #e3f0ff 100%);
             padding: 40px 20px;
-            color: #1d1d1f;
             overflow-x: hidden;
+            background: var(--light-bg);
+            color: var(--text-color);
+            transition: background 0.5s ease, color 0.3s ease;
         }
 
-        /* 标题样式 (macOS 26渐变标题) */
+        /* 修复1：明确定义主题类 */
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--text-color-dark);
+        }
+
         .page-title {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
             font-weight: 700;
             margin: 20px 0 50px;
-            background: linear-gradient(90deg, #0071e3, #2997ff);
+            /* 修复2：使用CSS变量控制标题渐变 */
+            background: var(--title-gradient);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 8px rgba(250, 253, 255, 0.5);
+            text-shadow: 0 2px 8px rgba(240, 240, 255, 0.5);
             letter-spacing: -0.5px;
+            position: relative;
         }
 
-        /* 毛玻璃效果层 (macOS窗口质感) */
+        .folder-decoration {
+            position: absolute;
+            width: 60px;
+            height: 50px;
+            background: rgba(141, 125, 242, 0.15);
+            border-radius: 10px;
+            top: -10px;
+            left: -30px;
+            z-index: -1;
+            transform: rotate(-5deg);
+        }
+
         .frosted-glass {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(25px) saturate(180%);
             z-index: -1;
         }
 
-        /* ===== 项目卡片 ===== */
         #projects {
             display: flex;
             flex-wrap: wrap;
@@ -60,14 +112,23 @@
             display: flex;
             align-items: center;
             padding: 20px 25px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
+            background: var(--card-light);
+            backdrop-filter: blur(16px) saturate(180%); /* 毛玻璃效果强化 */
             border-radius: 24px;
-            border: 1.5px solid #e5eaf0;
-            box-shadow: 0 12px 48px rgba(0, 113, 227, 0.1);
+            /* 修复3：使用CSS变量控制边框 */
+            border: 1.5px solid var(--border-color);
+            box-shadow: 0 12px 36px rgba(141, 125, 242, 0.08);
             text-decoration: none;
-            color: #1d1d1f;
+            color: inherit; /* 继承父级颜色 */
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 修复4：明确定义深色模式卡片样式 */
+        body.dark-mode .project {
+            background: var(--card-dark);
+            border: 1.5px solid var(--border-color-dark);
         }
 
         .project img {
@@ -75,6 +136,9 @@
             height: 50px;
             margin-right: 18px;
             transition: transform 0.3s ease;
+            background: rgba(141, 125, 242, 0.08);
+            border-radius: 12px;
+            padding: 8px;
         }
 
         .project span {
@@ -82,19 +146,39 @@
             font-weight: 500;
         }
 
-        /* 悬停效果 (macOS动态反馈) */
         .project:hover {
             transform: translateY(-8px);
-            box-shadow: 0 24px 56px rgba(0, 113, 227, 0.18);
-            border: 1.5px solid #2997ff;
-            background: linear-gradient(90deg, #fafdff 60%, #e3f0ff 100%);
+            box-shadow: 0 20px 50px rgba(141, 125, 242, 0.15);
+            border: 1.5px solid var(--accent-color);
         }
 
         .project:hover img {
             transform: scale(1.1);
+            background: rgba(141, 125, 242, 0.15);
         }
 
-        /* ===== 布局调整 ===== */
+        .project::after {
+            content: attr(data-displayName);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 93px;
+            color: transparent;
+            background: var(--highlight-color);
+            -webkit-background-clip: text;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project:hover::after {
+            opacity: 0.5;
+        }
+
         .blog {
             width: calc(33.333% - 40px);
             max-width: 280px;
@@ -109,38 +193,89 @@
             min-width: 160px;
         }
 
-        /* ===== 响应式优化 ===== */
-        @media (max-width: 600px) {
-            .non-blog {
-                width: calc(50% - 30px);
-            }
+        @media (max-width: 1024px) {
             .blog {
-                width: calc(50% - 30px);
-                margin-right: 0px;
-                margin-left: 0px;
-
+                margin-right: 20%;
+                margin-left: 20%;
             }
+        }
 
+        @media (max-width: 768px) {
+            .non-blog, .blog {
+                width: calc(50% - 30px);
+                margin-right: 0;
+                margin-left: 0;
+            }
+            
             .project {
                 padding: 18px;
+            }
+            
+            .folder-decoration {
+                display: none;
             }
         }
 
         @media (max-width: 480px) {
             .non-blog, .blog {
                 width: 100%;
-                margin: 0;
             }
             .page-title {
-                font-size: 2.2rem;
+                font-size: 2.0rem;
             }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(200, 200, 220, 0.5);
+        }
+
+        /* 修复5：深色模式下的切换器样式 */
+        body.dark-mode .theme-toggle {
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid rgba(100, 100, 120, 0.5);
+            color: var(--text-color-dark);
+        }
+
+        .theme-toggle button {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            color: inherit;
+        }
+
+        .theme-toggle button.active {
+            background: var(--accent-color);
+            color: white;
         }
     </style>
 </head>
 <body>
-    <h1 class="page-title">SYZhong 服务聚合</h1>
+    <h1 class="page-title">SYZhong 服务聚合<div class="folder-decoration"></div></h1>
     <div id="projects"></div>
     <div class="frosted-glass"></div>
+    
+    <!-- macOS 26 风格主题切换器 -->
+    <div class="theme-toggle">
+        <button class="active" id="light-theme">浅色</button>
+        <button id="dark-theme">深色</button>
+        <button id="auto-theme">自动</button>
+    </div>
 
     <script>
         const projects = [
@@ -171,6 +306,7 @@
             const projectElement = document.createElement('a');
             projectElement.href = project.link;
             projectElement.className = 'project';
+            projectElement.dataset.displayName = project.displayName; // 用于高亮效果
             projectElement.classList.add(project.name === 'blog' ? 'blog' : 'non-blog');
             projectElement.target = "_blank";
             projectElement.innerHTML = `
@@ -179,6 +315,99 @@
             `;
             projectsContainer.appendChild(projectElement);
         });
+        
+        // macOS 26 主题切换功能
+        // 修复6：增强主题切换功能
+        const lightThemeBtn = document.getElementById('light-theme');
+        const darkThemeBtn = document.getElementById('dark-theme');
+        const autoThemeBtn = document.getElementById('auto-theme');
+        const body = document.body;
+        
+        // 初始化主题状态
+        function initTheme() {
+            // 修复7：添加localStorage读取错误处理
+            let savedTheme = 'auto';
+            try {
+                savedTheme = localStorage.getItem('theme') || 'auto';
+            } catch (e) {
+                console.warn('无法读取localStorage:', e);
+            }
+            setActiveButton(savedTheme);
+            applyTheme(savedTheme);
+        }
+        
+        // 应用主题
+        function applyTheme(theme) {
+            body.classList.remove('light-mode', 'dark-mode');
+            
+            // 修复8：正确处理auto模式
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+            } else if (theme === 'dark') {
+                body.classList.add('dark-mode');
+            } else {
+                // auto模式跟随系统设置
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    body.classList.add('dark-mode');
+                } else {
+                    body.classList.add('light-mode');
+                }
+            }
+        }
+        
+        // 设置活动按钮
+        function setActiveButton(theme) {
+            [lightThemeBtn, darkThemeBtn, autoThemeBtn].forEach(btn => 
+                btn.classList.remove('active')
+            );
+            
+            if (theme === 'light') lightThemeBtn.classList.add('active');
+            if (theme === 'dark') darkThemeBtn.classList.add('active');
+            if (theme === 'auto') autoThemeBtn.classList.add('active');
+        }
+        
+        // 按钮点击事件
+        lightThemeBtn.addEventListener('click', () => {
+            try {
+                localStorage.setItem('theme', 'light');
+            } catch (e) {
+                console.warn('无法写入localStorage:', e);
+            }
+            applyTheme('light');
+            setActiveButton('light');
+        });
+        
+        darkThemeBtn.addEventListener('click', () => {
+            try {
+                localStorage.setItem('theme', 'dark');
+            } catch (e) {
+                console.warn('无法写入localStorage:', e);
+            }
+            applyTheme('dark');
+            setActiveButton('dark');
+        });
+        
+        autoThemeBtn.addEventListener('click', () => {
+            try {
+                localStorage.setItem('theme', 'auto');
+            } catch (e) {
+                console.warn('无法写入localStorage:', e);
+            }
+            applyTheme('auto');
+            setActiveButton('auto');
+        });
+        
+        // 监听系统主题变化
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        darkModeMediaQuery.addEventListener('change', e => {
+            // 修复9：仅在auto模式下响应系统变化
+            if (localStorage.getItem('theme') === 'auto') {
+                applyTheme('auto');
+            }
+        });
+        
+        // 初始化
+        initTheme();
     </script>
 </body>
 </html>
